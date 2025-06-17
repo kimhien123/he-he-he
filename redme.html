@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chim Bay Tình Bay</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      overflow: hidden;
+      background: linear-gradient(#aee2ff, #ffffff);
+    }
+    #gameContainer {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      background-image: url('file:///C:/Users/Kim%20Hien/Desktop/4b2fbbbbf4cab57b58f9c94227b03e42.jpg'); /* bg dễ thương */
+      background-size: cover;
+    }
+    #bird {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      top: 150px;
+      left: 100px;
+      background-image: url('https://i.imgur.com/OdL0XPt.png'); /* ảnh chim */
+      background-size: cover;
+    }
+    .pipe {
+      width: 60px;
+      background-color: #4ec228;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div id="gameContainer">
+    <div id="bird"></div>
+  </div>
+  <script>
+    const bird = document.getElementById("bird");
+    const gameContainer = document.getElementById("gameContainer");
+
+    let birdY = 150;
+    let velocity = 0;
+    const gravity = 0.5;
+    const jump = -8;
+
+    document.addEventListener("mousedown", () => {
+      velocity = jump;
+    });
+
+    function createPipe() {
+      const pipeTop = document.createElement("div");
+      const pipeBottom = document.createElement("div");
+      const gap = 130;
+      const pipeHeight = Math.floor(Math.random() * 250) + 50;
+      const pipeX = window.innerWidth;
+
+      pipeTop.classList.add("pipe");
+      pipeBottom.classList.add("pipe");
+
+      pipeTop.style.height = pipeHeight + "px";
+      pipeTop.style.top = "0px";
+      pipeTop.style.left = pipeX + "px";
+
+      pipeBottom.style.height = window.innerHeight - pipeHeight - gap + "px";
+      pipeBottom.style.bottom = "0px";
+      pipeBottom.style.left = pipeX + "px";
+
+      gameContainer.appendChild(pipeTop);
+      gameContainer.appendChild(pipeBottom);
+
+      movePipe(pipeTop, pipeBottom);
+    }
+
+    function movePipe(top, bottom) {
+      let pipeX = window.innerWidth;
+      const move = setInterval(() => {
+        pipeX -= 3;
+        top.style.left = pipeX + "px";
+        bottom.style.left = pipeX + "px";
+
+        if (pipeX < -60) {
+          clearInterval(move);
+          gameContainer.removeChild(top);
+          gameContainer.removeChild(bottom);
+        }
+      }, 20);
+    }
+
+    setInterval(createPipe, 2000);
+
+    function gameLoop() {
+      velocity += gravity;
+      birdY += velocity;
+      bird.style.top = birdY + "px";
+
+      if (birdY > window.innerHeight || birdY < 0) {
+        alert("Game Over!");
+        location.reload();
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>
